@@ -171,8 +171,38 @@ public class Fingerprint {
     * @return A new array containing each pixel's value after the step.
     */
     public static boolean[][] thinningStep(boolean[][] image, int step) {
-        //TODO implement
-        return null;
+        // 1. ensure the validity of our inputs
+        if (step != 0 && step != 1) throw new IllegalArgumentException();
+
+        // 2. recursively discard redundant pixels
+        for (int i = 0; i < image.length; ++i) {
+            for (int j = 0; j < image[0].length; ++j) {
+                // a. check that the pixel at (i, j) is black
+                if (!image[i][j]) continue;
+
+                // b. get the number of surrounding black neighbours
+                boolean[] neighbours = getNeighbours(image, i, j);
+                int neighbourCount = blackNeighbours(neighbours);
+
+                // c. check that the pixel at (i, j) has more than 2 but less than 6 black neighbours
+                if (neighbourCount < 2 || neighbourCount > 6) continue;
+
+                // d. check that specific neighbours are white (different from step 0 and 1)
+                int[][] indexes = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } }; // indexes where to expect white neighbours
+
+                    // i. check that P0, P2, or P4/P6 are white neighbours
+                if (neighbours[indexes[step][0]] && neighbours[indexes[step][1]] && neighbours[indexes[step][2]]) continue;
+
+                    // ii. check that P2/P0, P4, or P6 are white neighbours
+                if (neighbours[indexes[step][3]] && neighbours[indexes[step][4]] && neighbours[indexes[step][5]]) continue;
+
+                // e. thin-out the pixel at (i, j)
+                image[i][j] = false;
+            }
+        }
+
+        // 3. return the thinned-out image
+        return image;
     }
 
     /**
@@ -183,8 +213,20 @@ public class Fingerprint {
     *         applying the thinning algorithm.
     */
     public static boolean[][] thin(boolean[][] image) {
-        //TODO implement
-        return null;
+        boolean[][] thin1, thin2;
+
+        // 1. thin-out the image as long as the line is not 1 pixel wide
+        do {
+            // a. execute step 1
+            thin1 = thinningStep(image, 0);
+
+            // b. execute step 2
+            thin2 = thinningStep(image, 1);
+
+        } while (!identical(thin1, thin2));
+
+        // 3. return the 1 pixel thinned-out image
+        return image;
     }
 
     /**
