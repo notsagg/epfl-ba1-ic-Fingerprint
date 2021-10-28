@@ -1,5 +1,6 @@
 package cs107;
 
+import java.util.EmptyStackException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,10 +67,29 @@ public class Fingerprint {
     * @return An array containing each neighbours' value.
     */
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-        assert (image != null); // special case that is not expected (the image is supposed to have been checked
-        // earlier)
-        //TODO implement
-        return null;
+        int[][] positions = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
+        boolean[] neighbours = new boolean[8];
+
+        // 1. ensure the existence of the image
+        if (image.length == 0) throw new EmptyStackException();
+
+        // 2. mark the position of our neighbours if they exist
+        for (int i = 0; i < 8; ++i) {
+            // a. get the corresponding position
+            int longitude = row + positions[i][0], latitude = col + positions[i][1];
+
+            // b. handle the corner case (upper-left, upper-right, lower-left, and lower-right)
+            if (longitude < 0 || latitude < 0 || longitude >= image.length || latitude >= image[0].length) {
+                neighbours[i] = false;
+
+            // c. mark the neighbour
+            } else {
+                neighbours[i] = image[longitude][latitude];
+            }
+        }
+
+        // 3. return an array of neighbours
+        return neighbours;
     }
 
     /**
