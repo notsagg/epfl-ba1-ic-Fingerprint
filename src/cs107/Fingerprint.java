@@ -123,8 +123,19 @@ public class Fingerprint {
     * @return the number of white to black transitions.
     */
     public static int transitions(boolean[] neighbours) {
-        //TODO implement
-        return 0;
+        int transitions = 0; // number of transitions from white to black made
+
+        // 1. count the number of essential transitions made (white to black)
+        for (int i = 0; i < neighbours.length; ++i) {
+            // 1. compute a rotating previous element index
+            int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
+
+            // 2. check if there were a notable transition
+            if (neighbours[i] && !neighbours[i-1]) transitions++;
+        }
+
+        // 2. return the total count
+        return transitions;
     }
 
     /**
