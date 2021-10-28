@@ -102,8 +102,15 @@ public class Fingerprint {
     * @return the number of black neighbours.
     */
     public static int blackNeighbours(boolean[] neighbours) {
-        //TODO implement
-        return 0;
+        int encounter = 0; // number of black pixels encountered
+
+        // 1. count the number of encountered black pixels
+        for (int i = 0; i < neighbours.length; ++i) {
+            if (neighbours[i]) encounter++;
+        }
+
+        // 2. return the total count
+        return encounter;
     }
 
     /**
