@@ -298,8 +298,31 @@ public class Fingerprint {
     * @return the slope.
     */
     public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-        //TODO implement
-        return 0;
+        int xy = 0, x2 = 0, y2 = 0; // working variables
+
+        // 1. recursively compute the three components of a linear regression
+        for (int y = 0; y < connectedPixels.length; ++y) {
+            for (int x = 0; x < connectedPixels[0].length; ++x) {
+                // a. check that the current coordinates represent a pixel
+                if (!connectedPixels[y][x]) continue;
+
+                // b. compute the product of the coordinates (col x row)
+                xy += ((x-col) * (y-row));
+
+                // c. compute the square of the row coordinate
+                y2 += Math.pow(x-col, 2);
+
+                // d. compute the square of the col coordinate
+                x2 += Math.pow(y-row, 2);
+            }
+        }
+
+        // 2. handle the vertical slope case
+        if (x2 == 0) return Double.POSITIVE_INFINITY;
+
+        // 3. compute the general slope
+        if (x2 >= y2) return (double)(xy)/x2;
+        else return (double)(y2)/xy;
     }
 
     /**
