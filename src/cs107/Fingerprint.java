@@ -123,7 +123,7 @@ public class Fingerprint {
             int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
 
             // 2. check if there were a notable transition
-            if (neighbours[i] && !neighbours[i-1]) transitions++;
+            if (neighbours[i] && !neighbours[previous]) transitions++;
         }
 
         // 2. return the total count
@@ -236,53 +236,56 @@ public class Fingerprint {
     *         <code>(row, col)</code>.
     */
     public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-        boolean[][] path = new boolean[image.length][image[0].length]; // blank image to work on
         int searchRow = row, searchCol = col; // coordinates following a minutia path
-        int maxSpan = 2*distance+1; // maximum distance allowed from the minutia
-        boolean flag = true; // minutia path search flag
 
-        // 1. compute the maximum/minimum coordinates of the operating field
-        int minX = (col - maxSpan) < 0 ? 0 : (col - maxSpan);
-        int minY = (row - maxSpan) < 0 ? 0 : (row - maxSpan);
-        int maxX = (col + maxSpan) >= image[0].length ? image[0].length-1 : (col + maxSpan);
-        int maxY = (row + maxSpan) >= image.length ? image.length-1 : (row + maxSpan);
+        // 1. check that there is an actual minutia at the given row and column
+        if (!image[row][col]) throw new IllegalArgumentException("expecting a set pixel at (row, col)");
 
-        // 2. mark the minutia on the path
-        path[searchRow][searchCol] = true;
+        // 2. create a blank image to write the extracted minutia
+        boolean[][] minutia = new boolean[image.length][image[0].length]; // blank image to work on
 
-        // 3. mark surrounding pixels while there are more to mark
-        while (flag) {
-            // a. get the surrounding neighbours
+        // 3. compute the maximum/minimum coordinates of the operating field
+        int minCol = (col - distance) < 0 ? 0 : (col - distance);
+        int minRow = (row - distance) < 0 ? 0 : (row - distance);
+        int maxCol = (col + distance) >= image[0].length ? image[0].length-1 : (col + distance);
+        int maxRow = (row + distance) >= image.length ? image.length-1 : (row + distance);
+
+        // 4. while there are pixels to mark, mark them
+        while (true) {
+            // a. mark the pixel at (search row, search col)
+            if (searchRow <= maxRow && searchRow >= minRow && searchCol <= maxCol && searchCol >= minCol) {
+                minutia[searchRow][searchCol] = true;
+            }
+
+            // b. get the surrounding neighbour
             boolean[] neighbours = getNeighbours(image, searchRow, searchCol);
 
-            // b. for each and every neighbour
-            for (int i = 0; i < neighbours.length; ++i) {
-                // i. check that the neighbour is black
-                if (!neighbours[i]) continue;
+            // c. find the coordinate of the first pixel transition (from white to black)
+            for (int i = 1; i < neighbours.length; ++i) {
+                // i. compute a rotating previous element index
+                int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
 
-                // ii. get the position of this valid neighbour
-                int neighbourX = searchRow + neighbourMapping[i][0], neighbourY = searchCol + neighbourMapping[i][1];
+                // ii. memorize the coordinates if there is a notable transition
+                if (neighbours[i] && !neighbours[previous]) {
 
-                // iii. check that the neighbour is not located outside the operating field
-                    // - maximum X and Y values of the operating field
-                if (neighbourX > maxX || neighbourY > maxY) { flag = false; continue; }
+                    searchRow += neighbourMapping[i][0];
+                    searchCol += neighbourMapping[i][1];
 
-                    // - minimum X and Y values of the operating field
-                if (neighbourX < minX || neighbourY < minY) { flag = false; continue; }
-
-                // iv. pursue the path
-                if (image[neighbourX][neighbourY]) {
-                    path[neighbourX][neighbourY] = true;
+                    // break if the transition has not yet been handled
+                    if (!minutia[searchRow][searchCol]) {
+                        break;
+                    }
                 }
+            }
 
-                // v. update our coordinates (row and col)
-                searchRow = neighbourX;
-                searchCol = neighbourY;
+            // d. exit if the said pixel is the starting point and if no transitions remain to inspect
+            if (minutia[searchRow][searchCol]) {
+                break;
             }
         }
 
-        // 4. return a new image of connected pixels
-        return path;
+        // 5. return a new image of connected pixels
+        return minutia;
     }
 
     /**
