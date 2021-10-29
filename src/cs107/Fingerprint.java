@@ -1,6 +1,5 @@
 package cs107;
 
-import java.util.EmptyStackException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,35 +8,27 @@ import java.util.List;
 * Provides tools to compare fingerprint.
 */
 public class Fingerprint {
-
-    /**
-    * The number of pixels to consider in each direction when doing the linear
-    * regression to compute the orientation.
-    */
+    // MARK: - Public Attributes
+    /// The number of pixels to consider in each direction when doing the linear regression to compute the orientation
     public static final int ORIENTATION_DISTANCE = 16;
 
-    /**
-    * The maximum distance between two minutiae to be considered matching.
-    */
+    /// The maximum distance between two minutiae to be considered matching
     public static final int DISTANCE_THRESHOLD = 5;
 
-    /**
-    * The number of matching minutiae needed for two fingerprints to be considered
-    * identical.
-    */
+    /// The number of matching minutiae needed for two fingerprints to be considered identical
     public static final int FOUND_THRESHOLD = 20;
 
-    /**
-    * The distance between two angle to be considered identical.
-    */
+    /// The distance between two angle to be considered identical
     public static final int ORIENTATION_THRESHOLD = 20;
 
-    /**
-    * The offset in each direction for the rotation to test when doing the
-    * matching.
-    */
+    /// The offset in each direction for the rotation to test when doing the matching
     public static final int MATCH_ANGLE_OFFSET = 2;
 
+    // MARK: - Private Attributes
+    /// The position of neighbour P0 to P7 relative to (row, col) in an image
+    private static final int[][] neighbourMapping = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
+
+    // MARK: - Public Methods
     /**
     * Returns an array containing the value of the 8 neighbours of the pixel at
     * coordinates <code>(row, col)</code>.
@@ -67,16 +58,17 @@ public class Fingerprint {
     * @return An array containing each neighbours' value.
     */
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-        int[][] positions = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
         boolean[] neighbours = new boolean[8];
 
         // 1. ensure the existence of the image
-        if (image.length == 0) throw new EmptyStackException();
+        if (image.length == 0) {
+            throw new IllegalArgumentException("parameter image is expected to contain at least one pixel");
+        }
 
         // 2. mark the position of our neighbours if they exist
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < neighbours.length; ++i) {
             // a. get the corresponding position
-            int longitude = row + positions[i][0], latitude = col + positions[i][1];
+            int longitude = row + neighbourMapping[i][0], latitude = col + neighbourMapping[i][1];
 
             // b. handle the corner case (upper-left, upper-right, lower-left, and lower-right)
             if (longitude < 0 || latitude < 0 || longitude >= image.length || latitude >= image[0].length) {
@@ -172,7 +164,9 @@ public class Fingerprint {
     */
     public static boolean[][] thinningStep(boolean[][] image, int step) {
         // 1. ensure the validity of our inputs
-        if (step != 0 && step != 1) throw new IllegalArgumentException();
+        if (step != 0 && step != 1) {
+            throw new IllegalArgumentException("parameter step is expected to be either 0 or 1");
+        }
 
         // 2. recursively discard redundant pixels
         for (int i = 0; i < image.length; ++i) {
