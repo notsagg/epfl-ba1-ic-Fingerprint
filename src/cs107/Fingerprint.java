@@ -236,8 +236,53 @@ public class Fingerprint {
     *         <code>(row, col)</code>.
     */
     public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-        //TODO implement
-        return null;
+        boolean[][] path = new boolean[image.length][image[0].length]; // blank image to work on
+        int searchRow = row, searchCol = col; // coordinates following a minutia path
+        int maxSpan = 2*distance+1; // maximum distance allowed from the minutia
+        boolean flag = true; // minutia path search flag
+
+        // 1. compute the maximum/minimum coordinates of the operating field
+        int minX = (col - maxSpan) < 0 ? 0 : (col - maxSpan);
+        int minY = (row - maxSpan) < 0 ? 0 : (row - maxSpan);
+        int maxX = (col + maxSpan) >= image[0].length ? image[0].length-1 : (col + maxSpan);
+        int maxY = (row + maxSpan) >= image.length ? image.length-1 : (row + maxSpan);
+
+        // 2. mark the minutia on the path
+        path[searchRow][searchCol] = true;
+
+        // 3. mark surrounding pixels while there are more to mark
+        while (flag) {
+            // a. get the surrounding neighbours
+            boolean[] neighbours = getNeighbours(image, searchRow, searchCol);
+
+            // b. for each and every neighbour
+            for (int i = 0; i < neighbours.length; ++i) {
+                // i. check that the neighbour is black
+                if (!neighbours[i]) continue;
+
+                // ii. get the position of this valid neighbour
+                int neighbourX = searchRow + neighbourMapping[i][0], neighbourY = searchCol + neighbourMapping[i][1];
+
+                // iii. check that the neighbour is not located outside the operating field
+                    // - maximum X and Y values of the operating field
+                if (neighbourX > maxX || neighbourY > maxY) { flag = false; continue; }
+
+                    // - minimum X and Y values of the operating field
+                if (neighbourX < minX || neighbourY < minY) { flag = false; continue; }
+
+                // iv. pursue the path
+                if (image[neighbourX][neighbourY]) {
+                    path[neighbourX][neighbourY] = true;
+                }
+
+                // v. update our coordinates (row and col)
+                searchRow = neighbourX;
+                searchCol = neighbourY;
+            }
+        }
+
+        // 4. return a new image of connected pixels
+        return path;
     }
 
     /**
