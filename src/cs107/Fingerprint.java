@@ -252,35 +252,59 @@ public class Fingerprint {
 
         // 4. while there are pixels to mark, mark them
         while (true) {
-            // a. mark the pixel at (search row, search col)
-            if (searchRow <= maxRow && searchRow >= minRow && searchCol <= maxCol && searchCol >= minCol) {
-                minutia[searchRow][searchCol] = true;
+            // a. mark the pixel at (search row, search col) if contained in the maximum distance
+            if (searchRow <= maxRow && searchRow >= minRow) {
+                if (searchCol <= maxCol && searchCol >= minCol) {
+                    minutia[searchRow][searchCol] = true;
+                }
             }
 
             // b. get the surrounding neighbour
             boolean[] neighbours = getNeighbours(image, searchRow, searchCol);
 
+            // c. if all neigbours of the origin point are marked then exit
+            if (searchRow == row && searchCol == col) {
+                int marked = 0; // number of marked neighbours
+
+                // i. count the number of marked neighbours
+                for (int i = 0; i < neighbours.length; ++i) {
+                    if (neighbours[i] && minutia[row+neighbourMapping[i][0]][col+neighbourMapping[i][1]]) {
+                        marked++;
+                    }
+                }
+
+                // ii. if all neighbours are marked then exit
+                if (blackNeighbours(neighbours) == marked) break;
+            }
+
             // c. find the coordinate of the first pixel transition (from white to black)
-            for (int i = 1; i < neighbours.length; ++i) {
+            int upcomingRow = 0, upcomingCol = 0; // potential path to be taken
+
+            for (int i = 0; i < neighbours.length; ++i) {
                 // i. compute a rotating previous element index
                 int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
 
                 // ii. memorize the coordinates if there is a notable transition
                 if (neighbours[i] && !neighbours[previous]) {
+                    upcomingRow = searchRow + neighbourMapping[i][0];
+                    upcomingCol = searchCol + neighbourMapping[i][1];
 
-                    searchRow += neighbourMapping[i][0];
-                    searchCol += neighbourMapping[i][1];
-
-                    // break if the transition has not yet been handled
-                    if (!minutia[searchRow][searchCol]) {
-                        break;
+                    if (!minutia[upcomingRow][upcomingCol]) {
+                        if (searchRow <= maxRow && searchRow >= minRow) {
+                            if (searchCol <= maxCol && searchCol >= minCol) {
+                                searchRow = upcomingRow;
+                                searchCol = upcomingCol;
+                                break;
+                            }
+                        }
                     }
                 }
-            }
 
-            // d. exit if the said pixel is the starting point and if no transitions remain to inspect
-            if (minutia[searchRow][searchCol]) {
-                break;
+                // iii. take the pass anyway if on the last iteration
+                if (i == neighbours.length-1) {
+                    searchRow = upcomingRow;
+                    searchCol = upcomingCol;
+                }
             }
         }
 
