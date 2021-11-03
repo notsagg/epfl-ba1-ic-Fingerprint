@@ -394,8 +394,20 @@ public class Fingerprint {
     * @return The orientation in degrees.
     */
     public static int computeOrientation(boolean[][] image, int row, int col, int distance) {
-        //TODO implement
-        return 0;
+        // 1. get the connection pixels of (row, col) in image
+        boolean[][] connectedPixels = connectedPixels(image, row, col, distance);
+
+        // 2. compute the slope of this minutia represented by the connected pixels
+        double slope = computeSlope(connectedPixels, row, col);
+
+        // 3. compute the angle in radians between the x-axis and the slope
+        double angle = computeAngle(connectedPixels, row, col, slope);
+
+        // 4. convert the computed angle from radian to degrees
+        float degrees = (float)Math.toDegrees(angle);
+
+        // 5. return the orientation of the minutia in degrees
+        return (degrees < 0) ? Math.round(degrees + 360) : Math.round(degrees);
     }
 
     /**
