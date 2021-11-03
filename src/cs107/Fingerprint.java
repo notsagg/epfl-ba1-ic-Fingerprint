@@ -331,13 +331,13 @@ public class Fingerprint {
                 if (!connectedPixels[y][x]) continue;
 
                 // b. compute the product of the coordinates (col x row)
-                xy += ((x-col) * (y-row));
+                xy += ((x-col) * (row-y));
 
                 // c. compute the square of the row coordinate
-                y2 += Math.pow(x-col, 2);
+                y2 += Math.pow(row-y, 2);
 
                 // d. compute the square of the col coordinate
-                x2 += Math.pow(y-row, 2);
+                x2 += Math.pow(x-col, 2);
             }
         }
 
