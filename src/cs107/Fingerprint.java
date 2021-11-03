@@ -361,8 +361,25 @@ public class Fingerprint {
     * @return the orientation of the minutia in radians.
     */
     public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-        //TODO implement
-        return 0;
+        // 1. compute the orthonal slope
+        double orthogonal = -1 * Math.pow(slope, -1);
+
+        // 2. count the number of pixels to the left and right side of the minutia
+        int lower = 0, upper = 0; // lower/upper pixel count
+
+        for (int i = 0; i < connectedPixels.length; ++i) {
+            for (int j = 0; j < connectedPixels[0].length; ++j) {
+                // a. check that the pixel at (i, j) is part of the minutia
+                if (!connectedPixels[i][j]) continue;
+
+                // b. increment accordingly (pixel is above or belove the orthogonal line)
+                if (j >= orthogonal*i) upper++;
+                else lower++;
+            }
+        }
+
+        // 3. return the angle determined to be positive or negative
+        return (upper >= lower) ? Math.atan(slope) : Math.atan(slope + Math.PI);
     }
 
     /**
