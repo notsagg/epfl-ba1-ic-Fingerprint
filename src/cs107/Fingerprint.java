@@ -420,8 +420,33 @@ public class Fingerprint {
     * @see #thin(boolean[][])
     */
     public static List<int[]> extract(boolean[][] image) {
-        //TODO implement
-        return null;
+        // 1. create a new array list to hold the extracted minutias (row, col and orientation)
+        ArrayList<int[]> list = new ArrayList<int[]>();
+
+        // 2. extract the minutias from the input image
+        for (int i = 1; i < image.length-1; ++i) {
+            for (int j = 1; j < image[0].length-1; ++j) {
+                // a. ensure that (i, j) is a pixel
+                if (!image[i][j]) continue;
+
+                // b. get the number of transitions around the pixel at (i, j)
+                boolean[] neighbours = getNeighbours(image, i, j);
+                int transitions = transitions(neighbours);
+
+                // c. handle exclusively terminations (1) and bifurcations (3)
+                if (transitions != 1 && transitions != 3) continue;
+
+                // d. get the ortienttion of the minutia
+                int orientation = computeOrientation(image, i, j, image.length);
+                int[] minutia = { i, j, orientation };
+
+                // e. apend the minutia to our list
+                list.add(minutia);
+            }
+        }
+
+        // 3. reutrn the list of extracted minutia
+        return list;
     }
 
     /**
