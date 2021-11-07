@@ -571,8 +571,32 @@ public class Fingerprint {
     */
     public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
     int maxOrientation) {
-        //TODO implement
-        return 0;
+        int matched = 0; // number of matching minutiae
+
+        // 1. compare all minutiae from minutiae1 to all minutiae of minutia2
+        for (int i = 0; i < minutiae1.size(); ++i) {
+            for (int j = 0; j < minutiae2.size(); ++j) {
+                // a. compute the difference for all parameters between the two minutiae
+                int rowDiff = minutiae1.get(i)[0] - minutiae2.get(i)[0]; // difference in rows
+                int colDiff = minutiae1.get(i)[1] - minutiae2.get(i)[1]; // difference in columns
+                int angleDiff = minutiae1.get(i)[2] - minutiae2.get(i)[2]; // difference in orientation
+
+                // b. compute the distance between the two minutiae
+                int distance = (int)Math.sqrt(Math.pow(rowDiff, 2) + Math.pow(colDiff, 2));
+
+                // c. compare the distance separating the two minutiae
+                boolean distanceMatch = distance <= maxDistance;
+
+                // d. compare the orientation betweem the two minutiae
+                boolean angleMatch = angleDiff <= maxOrientation;
+
+                // e. increment the match count if all three parameters match with tolerance
+                if (distanceMatch && angleMatch) matched++;
+            }
+        }
+
+        // 2. returned the number of matching minutiae
+        return matched;
     }
 
     /**
