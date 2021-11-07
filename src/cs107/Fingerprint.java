@@ -459,8 +459,29 @@ public class Fingerprint {
     * @return the minutia rotated around the given center.
     */
     public static int[] applyRotation(int[] minutia, int centerRow, int centerCol, int rotation) {
-        //TODO implement
-        return null;
+        int[] orientedMinutia = new int[3]; // row, col, and orientation
+
+        // 1. compute the new coordinates of our oriented minutia
+            // a. compute the current cartesian coordinate system
+        int y = centerRow - minutia[0]; // tantamount to rows
+        int x = minutia[1] - centerCol; // tantamount to cols
+
+            // b. conver the rotation parameter from degrees to radians
+        double rad = Math.toRadians(rotation);
+
+            // c. compute the new cartesian coordinate system
+        int orientedY = (int)Math.round((x * Math.sin(rad)) + (y * Math.cos(rad))); // tantamount to rows
+        int orientedX = (int)Math.round((x * Math.cos(rad)) - (y * Math.sin(rad))); // tantamount to cols
+
+            // d. write the coordinates of our minutia in the new coordinate system
+        orientedMinutia[0] = centerRow - orientedY;
+        orientedMinutia[1] = orientedX + centerCol;
+
+        // 2. compute the orientation in the new coordinate system
+        orientedMinutia[2] = (minutia[2] + rotation) % 360;
+
+        // 3. return the parameters of our oriented minutia
+        return orientedMinutia;
     }
 
     /**
