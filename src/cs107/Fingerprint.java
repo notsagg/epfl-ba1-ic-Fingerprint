@@ -493,8 +493,17 @@ public class Fingerprint {
     * @return the translated minutia.
     */
     public static int[] applyTranslation(int[] minutia, int rowTranslation, int colTranslation) {
-        //TODO implement
-        return null;
+        int[] translatedMinutia = new int[3]; // row, col, and orientation
+
+        // 1. update the coordinates of our translated minutia
+        translatedMinutia[0] = minutia[0] - rowTranslation;
+        translatedMinutia[1] = minutia[1] - colTranslation;
+
+        // 2. keep the orientation of our minutia as is
+        translatedMinutia[2] = minutia[2];
+
+        // 3. return the parameters of our translated minutia
+        return translatedMinutia;
     }
 
     /**
