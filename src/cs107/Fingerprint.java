@@ -520,8 +520,16 @@ public class Fingerprint {
     */
     public static int[] applyTransformation(int[] minutia, int centerRow, int centerCol, int rowTranslation,
     int colTranslation, int rotation) {
-        //TODO implement
-        return null;
+        int[] transformedMinutia;
+
+        // 1. apply a rotation to our minutia
+        transformedMinutia = applyRotation(minutia, centerRow, centerCol, rotation);
+
+        // 2. apply a translation to our minutia
+        transformedMinutia = applyTranslation(minutia, rowTranslation, colTranslation);
+
+        // 3. return our transformed minutia
+        return transformedMinutia;
     }
 
     /**
@@ -538,8 +546,17 @@ public class Fingerprint {
     */
     public static List<int[]> applyTransformation(List<int[]> minutiae, int centerRow, int centerCol, int rowTranslation,
     int colTranslation, int rotation) {
-        //TODO implement
-        return null;
+        // 1. for each item of minutiae appply a transformation
+        for (int i = 0; i < minutiae.size(); ++i) {
+            // a. apply the transformation
+            int[] minutia = applyTransformation(minutiae.get(i), centerRow, centerCol, rowTranslation, colTranslation, rotation);
+
+            // b. update our list of minutias with the updated minutia
+            minutiae.set(i, minutia);
+        }
+
+        // 2. return the updated list of minutiae
+        return minutiae;
     }
     /**
     * Counts the number of overlapping minutiae.
