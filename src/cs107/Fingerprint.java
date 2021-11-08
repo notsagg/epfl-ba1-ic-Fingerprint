@@ -588,7 +588,7 @@ public class Fingerprint {
                 boolean distanceMatch = distance <= maxDistance;
 
                 // d. compare the orientation betweem the two minutiae
-                boolean angleMatch = angleDiff <= maxOrientation;
+                boolean angleMatch = angleDiff <= (maxOrientation + MATCH_ANGLE_OFFSET);
 
                 // e. increment the match count if all three parameters match with tolerance
                 if (distanceMatch && angleMatch) matched++;
@@ -608,7 +608,28 @@ public class Fingerprint {
     *         otherwise.
     */
     public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-        //TODO implement
+        // 1. superpose every minutiae from minutia2 over the minutia at i from minutiae1
+        for (int i = 0; i < minutiae1.size(); ++i) {
+            for (int j = 0; j < minutiae2.size(); ++j) {
+                // a. compute the transformation in row/col to apply (translation)
+                int rowDiff = minutiae2.get(j)[0] - minutiae1.get(i)[0];
+                int colDiff = minutiae2.get(j)[1] - minutiae1.get(i)[1];
+
+                // b. compute the transformation in orientation to apply (rotation)
+                int rotDiff = minutiae2.get(j)[2] - minutiae1.get(i)[2];
+
+                // c. superspose minutiae j over minutia i by applying the computed transformation
+                List<int[]> transformed = applyTransformation(minutiae2, minutiae1.get(i)[0], minutiae1.get(i)[1], rowDiff, colDiff, rotDiff);
+
+                // d. count the number of matching minutiae with a certain tolerance
+                int found = matchingMinutiaeCount(minutiae1, transformed, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+
+                // e. exit if there are enough matching minutiae
+                if (found >= FOUND_THRESHOLD) return true;
+            }
+        }
+
+        // 2. return false otherwise
         return false;
     }
 }
