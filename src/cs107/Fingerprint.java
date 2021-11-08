@@ -577,9 +577,9 @@ public class Fingerprint {
         for (int i = 0; i < minutiae1.size(); ++i) {
             for (int j = 0; j < minutiae2.size(); ++j) {
                 // a. compute the difference for all parameters between the two minutiae
-                int rowDiff = minutiae1.get(i)[0] - minutiae2.get(i)[0]; // difference in rows
-                int colDiff = minutiae1.get(i)[1] - minutiae2.get(i)[1]; // difference in columns
-                int angleDiff = minutiae1.get(i)[2] - minutiae2.get(i)[2]; // difference in orientation
+                int rowDiff = minutiae1.get(i)[0] - minutiae2.get(j)[0]; // difference in rows
+                int colDiff = minutiae1.get(i)[1] - minutiae2.get(j)[1]; // difference in columns
+                int angleDiff = minutiae1.get(i)[2] - minutiae2.get(j)[2]; // difference in orientation
 
                 // b. compute the distance between the two minutiae
                 int distance = (int)Math.sqrt(Math.pow(rowDiff, 2) + Math.pow(colDiff, 2));
