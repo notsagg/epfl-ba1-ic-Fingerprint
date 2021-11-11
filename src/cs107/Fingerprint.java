@@ -115,7 +115,7 @@ public class Fingerprint {
         int encounter = 0; // number of black pixels encountered
 
         // 4. count the number of encountered black pixels
-        for (int i = 0; i < neighbours.length; ++i) {
+        for (int i = 0; i < NEIGHBOUR_COUNT; ++i) {
             if (neighbours[i]) encounter++;
         }
 
@@ -133,18 +133,29 @@ public class Fingerprint {
     * @return the number of white to black transitions.
     */
     public static int transitions(boolean[] neighbours) {
+        // 1. ensure the existance of the neighbours array
+        if (neighbours == null) {
+            throw new IllegalArgumentException("error: neigbours is null");
+        }
+
+        // 2. ensure that neighbours is an array of neigbours
+        if (neighbours.length != NEIGHBOUR_COUNT) {
+            throw new IllegalArgumentException("error: neighbours is incomplete");
+        }
+
+        // 3. initialize working variables
         int transitions = 0; // number of transitions from white to black made
 
-        // 1. count the number of essential transitions made (white to black)
-        for (int i = 0; i < neighbours.length; ++i) {
+        // 4. count the number of essential transitions made (white to black)
+        for (int i = 0; i < NEIGHBOUR_COUNT; ++i) {
             // 1. compute a rotating previous element index
-            int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
+            int previous = (i-1 < 0) ? (i-1 + NEIGHBOUR_COUNT) : (i-1);
 
             // 2. check if there were a notable transition
             if (neighbours[i] && !neighbours[previous]) transitions++;
         }
 
-        // 2. return the total count
+        // 5. return the total count
         return transitions;
     }
 
