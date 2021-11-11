@@ -28,6 +28,9 @@ public class Fingerprint {
     /// The position of neighbour P0 to P7 relative to (row, col) in an image
     private static final int[][] neighbourMapping = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
 
+    /// The number of neighbours that exist around a given pixel
+    private static final int NEIGHBOUR_COUNT = 8;
+
     // MARK: - Public Methods
     /**
     * Returns an array containing the value of the 8 neighbours of the pixel at
@@ -67,12 +70,12 @@ public class Fingerprint {
         if (row >= image.length || col >= image[0].length) return null;
 
         // 3. initialize working variable
-        boolean[] neighbours = new boolean[8];
+        boolean[] neighbours = new boolean[NEIGHBOUR_COUNT];
 
         // 4. mark the position of our neighbours if they exist
-        for (int i = 0; i < neighbours.length; ++i) {
+        for (int i = 0; i < NEIGHBOUR_COUNT; ++i) {
             // a. get the corresponding position
-            int longitude = row + neighbourMapping[i][0], latitude = col + neighbourMapping[i][1];
+            int longitude = row + NEIGHBOUR_MAPPING[i][0], latitude = col + NEIGHBOUR_MAPPING[i][1];
 
             // b. handle the corner case (upper-left, upper-right, lower-left, and lower-right)
             if (longitude < 0 || latitude < 0 || longitude >= image.length || latitude >= image[0].length) {
@@ -98,14 +101,25 @@ public class Fingerprint {
     * @return the number of black neighbours.
     */
     public static int blackNeighbours(boolean[] neighbours) {
+        // 1. ensure the existance of the neighbours array
+        if (neighbours == null) {
+            throw new IllegalArgumentException("error: neigbours is null");
+        }
+
+        // 2. ensure that neighbours is an array of neigbours
+        if (neighbours.length != NEIGHBOUR_COUNT) {
+            throw new IllegalArgumentException("error: neighbours is incomplete");
+        }
+
+        // 3. initialize working variables
         int encounter = 0; // number of black pixels encountered
 
-        // 1. count the number of encountered black pixels
+        // 4. count the number of encountered black pixels
         for (int i = 0; i < neighbours.length; ++i) {
             if (neighbours[i]) encounter++;
         }
 
-        // 2. return the total count
+        // 5. return the total count
         return encounter;
     }
 
