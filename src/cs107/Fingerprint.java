@@ -58,14 +58,18 @@ public class Fingerprint {
     * @return An array containing each neighbours' value.
     */
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-        boolean[] neighbours = new boolean[8];
-
         // 1. ensure the existence of the image
-        if (image.length == 0) {
-            throw new IllegalArgumentException("parameter image is expected to contain at least one pixel");
+        if (image == null || image.length == 0) {
+            throw new IllegalArgumentException("error: image is expected to contain at least one pixel");
         }
 
-        // 2. mark the position of our neighbours if they exist
+        // 2. ensure that row and col are in bound
+        if (row >= image.length || col >= image[0].length) return null;
+
+        // 3. initialize working variable
+        boolean[] neighbours = new boolean[8];
+
+        // 4. mark the position of our neighbours if they exist
         for (int i = 0; i < neighbours.length; ++i) {
             // a. get the corresponding position
             int longitude = row + neighbourMapping[i][0], latitude = col + neighbourMapping[i][1];
@@ -80,7 +84,7 @@ public class Fingerprint {
             }
         }
 
-        // 3. return an array of neighbours
+        // 5. return an array of neighbours
         return neighbours;
     }
 
