@@ -52,7 +52,35 @@ public final class TestGetNeighbours {
             // b. assert that the method throws as expected
         assertNull("test case 5: should be null", Fingerprint.getNeighbours(im5, 10, 10));
 
-        // 6. summarize the testing process
+        // 6. random 4x4 image (1)
+            // a. construct the test case
+        boolean[][] im6 = {
+            { true, false, false, true },
+            { false, false, true, true },
+            { true, false, true, false },
+            { false, false, false, true }
+        };
+        boolean[] n6 = Fingerprint.getNeighbours(im6, 2, 1);
+        boolean[] expt6 = { false, true, true, false, false, false, true, false };
+
+            // b. assert the identical content of the two output arrays
+        assertTrue(Arrays.equals(n6, expt6));
+
+        // 7. random 4x4 image (2)
+            // a. construct the test case
+        boolean[][] im7 = {
+            { true, false, false, true },
+            { false, false, true, true },
+            { true, true, true, false },
+            { false, false, false, true }
+        };
+        boolean[] n7 = Fingerprint.getNeighbours(im7, 1, 0);
+        boolean[] expt7 = { true, false, false, true, true, false, false, false };
+
+            // b. assert the identical content of the two output arrays
+        assertTrue(Arrays.equals(n7, expt7));
+
+        // 8. summarize the testing process
         System.out.println(" => TestGetNeighbours - All Tests Passed");
     }
 }
