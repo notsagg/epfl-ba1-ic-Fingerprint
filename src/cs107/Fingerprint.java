@@ -26,7 +26,7 @@ public class Fingerprint {
 
     // MARK: - Private Attributes
     /// The position of neighbour P0 to P7 relative to (row, col) in an image
-    private static final int[][] neighbourMapping = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
+    private static final int[][] NEIGHBOUR_MAPPING = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
 
     /// The number of neighbours that exist around a given pixel
     private static final int NEIGHBOUR_COUNT = 8;
@@ -286,7 +286,7 @@ public class Fingerprint {
 
                 // i. count the number of marked neighbours
                 for (int i = 0; i < neighbours.length; ++i) {
-                    if (neighbours[i] && minutia[row+neighbourMapping[i][0]][col+neighbourMapping[i][1]]) {
+                    if (neighbours[i] && minutia[row+NEIGHBOUR_MAPPING[i][0]][col+NEIGHBOUR_MAPPING[i][1]]) {
                         marked++;
                     }
                 }
@@ -304,8 +304,8 @@ public class Fingerprint {
 
                 // ii. memorize the coordinates if there is a notable transition
                 if (neighbours[i] && !neighbours[previous]) {
-                    upcomingRow = searchRow + neighbourMapping[i][0];
-                    upcomingCol = searchCol + neighbourMapping[i][1];
+                    upcomingRow = searchRow + NEIGHBOUR_MAPPING[i][0];
+                    upcomingCol = searchCol + NEIGHBOUR_MAPPING[i][1];
 
                     if (!minutia[upcomingRow][upcomingCol]) {
                         if (searchRow <= maxRow && searchRow >= minRow) {
