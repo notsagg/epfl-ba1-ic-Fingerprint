@@ -53,6 +53,6 @@ public final class TestGetNeighbours {
         assertNull("test case 5: should be null", Fingerprint.getNeighbours(im5, 10, 10));
 
         // 6. summarize the testing process
-        System.out.println(" => All Tests Passed");
+        System.out.println(" => TestGetNeighbours - All Tests Passed");
     }
 }
