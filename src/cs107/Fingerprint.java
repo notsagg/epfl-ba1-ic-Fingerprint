@@ -258,20 +258,25 @@ public class Fingerprint {
     *         applying the thinning algorithm.
     */
     public static boolean[][] thin(boolean[][] image) {
-        boolean[][] thin1, thin2;
+        boolean[][] thin1, thin2 = new boolean[image.length][];
 
-        // 1. thin-out the image as long as the line is not 1 pixel wide
+        // 1. perform a deep-copy of the image to thin-out
+        for (int i = 0; i < image.length; ++i) {
+            thin2[i] = Arrays.copyOf(image[i], image[i].length);
+        }
+
+        // 2. thin-out the image as long as the line is not 1 pixel wide
         do {
             // a. execute step 1
-            thin1 = thinningStep(image, 0);
+            thin1 = thinningStep(thin2, 0);
 
             // b. execute step 2
-            thin2 = thinningStep(image, 1);
+            thin2 = thinningStep(thin2, 1);
 
         } while (!identical(thin1, thin2));
 
-        // 2. return the 1 pixel thinned-out image
-        return image;
+        // 3. return the 1 pixel thinned-out image
+        return thin2;
     }
 
     /**
