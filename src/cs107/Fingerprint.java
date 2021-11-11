@@ -31,6 +31,9 @@ public class Fingerprint {
     /// The number of neighbours that exist around a given pixel
     private static final int NEIGHBOUR_COUNT = 8;
 
+    /// Neighbours that ought to be white for a pixel to be considered redundant (sibblings for step 1 and step 2)
+    private static final int[][] THINNING_WHITES = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } };
+
     // MARK: - Public Methods
     /**
     * Returns an array containing the value of the 8 neighbours of the pixel at
@@ -202,39 +205,48 @@ public class Fingerprint {
     * @return A new array containing each pixel's value after the step.
     */
     public static boolean[][] thinningStep(boolean[][] image, int step) {
-        // 1. ensure the validity of our inputs
+        // 1. ensure the existence of the input image
+        if (image == null) throw new IllegalArgumentException("error: image is null");
+
+        // 2. ensure that the input image is not empty
+        if (image.length == 0) throw new IllegalArgumentException("error: image is empty");
+
+        // 3. ensure the validity of our inputs
         if (step != 0 && step != 1) {
-            throw new IllegalArgumentException("parameter step is expected to be either 0 or 1");
+            throw new IllegalArgumentException("error: step is neither 0 nor 1");
         }
 
-        // 2. recursively discard redundant pixels
+        // 4. recursively discard redundant pixels
         for (int i = 0; i < image.length; ++i) {
             for (int j = 0; j < image[0].length; ++j) {
-                // a. check that the pixel at (i, j) is black
+                // a. check that (i, j) is a pixel
                 if (!image[i][j]) continue;
 
-                // b. get the number of surrounding black neighbours
+                // b. get the number of surrounding pixels (black neighbours)
                 boolean[] neighbours = getNeighbours(image, i, j);
                 int neighbourCount = blackNeighbours(neighbours);
 
                 // c. check that the pixel at (i, j) has more than 2 but less than 6 black neighbours
                 if (neighbourCount < 2 || neighbourCount > 6) continue;
 
-                // d. check that specific neighbours are white (different from step 0 and 1)
-                int[][] indexes = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } }; // indexes where to expect white neighbours
+                // d. check that there is only one transition from the current pixel to the neighbour
+                if (transitions(neighbours) != 1) continue;
 
-                    // i. check that P0, P2, or P4/P6 are white neighbours
-                if (neighbours[indexes[step][0]] && neighbours[indexes[step][1]] && neighbours[indexes[step][2]]) continue;
+                // e. get the indexes where to expect white neighbours for the corresponding step
+                int[] whites = THINNING_WHITES[step];
 
-                    // ii. check that P2/P0, P4, or P6 are white neighbours
-                if (neighbours[indexes[step][3]] && neighbours[indexes[step][4]] && neighbours[indexes[step][5]]) continue;
+                // f. check that P0, P2, or P4/P6 are white neighbours
+                if (neighbours[whites[0]] && neighbours[whites[1]] && neighbours[whites[2]]) continue;
 
-                // e. thin-out the pixel at (i, j)
+                // g. check that P2/P0, P4, or P6 are white neighbours
+                if (neighbours[whites[3]] && neighbours[whites[4]] && neighbours[whites[5]]) continue;
+
+                // h. thin-out the pixel at (i, j)
                 image[i][j] = false;
             }
         }
 
-        // 3. return the thinned-out image
+        // 5. return the thinned-out image
         return image;
     }
 
@@ -258,7 +270,7 @@ public class Fingerprint {
 
         } while (!identical(thin1, thin2));
 
-        // 3. return the 1 pixel thinned-out image
+        // 2. return the 1 pixel thinned-out image
         return image;
     }
 
