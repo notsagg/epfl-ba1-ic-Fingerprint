@@ -168,19 +168,29 @@ public class Fingerprint {
     *         otherwise.
     */
     public static boolean identical(boolean[][] image1, boolean[][] image2) {
-        // 1. check that the two images are of identical sizes
-        if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
-            return false;
+        // 1. ensure the existence of both images to compare
+        if (image1 == null || image2 == null) {
+            throw new IllegalArgumentException("error: an image is null");
         }
 
-        // 2. if a single pixel differs then the two images are different
+        // 2. ensure that both images aren't empty
+        if (image1.length == 0 || image2.length == 0) {
+            throw new IllegalArgumentException("error: images are empty");
+        }
+
+        // 3. check that the two images are of identical sizes
+        if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
+            throw new IllegalArgumentException("error: images differ in size");
+        }
+
+        // 4. if a single pixel differs then the two images are different
         for (int i = 0; i < image1.length; ++i) {
             for (int j = 0; j < image1[0].length; ++j) {
                 if (image1[i][j] != image2[i][j]) return false;
             }
         }
 
-        // 3. otherwise the images are identical
+        // 5. otherwise the images are identical
         return true;
     }
 
