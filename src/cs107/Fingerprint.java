@@ -378,9 +378,20 @@ public class Fingerprint {
     * @return the slope.
     */
     public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-        int xy = 0, x2 = 0, y2 = 0; // working variables
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input array of connected pixels
+        if (connectedPixels == null) throw new IllegalArgumentException("error: connectedPixels is null");
 
-        // 1. recursively compute the three components of a linear regression
+            // b. ensure that the input array of connectedPixels is not empty
+        if (connectedPixels.length == 0) throw new IllegalArgumentException("error: connectedPixels is empty");
+
+            // c. check that col and row are positive integers
+        if (row < 0 || col < 0) throw new IllegalArgumentException("error: a paramater has negative value");
+
+        // 2. initialize working variables
+        int xy = 0, x2 = 0, y2 = 0; // x*y, x^2, and y^2
+
+        // 3. recursively compute the three components of a linear regression
         for (int y = 0; y < connectedPixels.length; ++y) {
             for (int x = 0; x < connectedPixels[0].length; ++x) {
                 // a. check that the current coordinates represent a pixel
@@ -397,10 +408,10 @@ public class Fingerprint {
             }
         }
 
-        // 2. handle the vertical slope case
+        // 4. handle the vertical slope case
         if (x2 == 0) return Double.POSITIVE_INFINITY;
 
-        // 3. compute the general slope
+        // 5. compute the general slope
         if (x2 >= y2) return (double)(xy)/x2;
         else return (double)(y2)/xy;
     }
