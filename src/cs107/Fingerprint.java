@@ -471,19 +471,31 @@ public class Fingerprint {
     * @return The orientation in degrees.
     */
     public static int computeOrientation(boolean[][] image, int row, int col, int distance) {
-        // 1. get the connection pixels of (row, col) in image
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input image
+        if (image == null) throw new IllegalArgumentException("error: image is null");
+
+            // b. ensure that the input image is not empty
+        if (image.length == 0) throw new IllegalArgumentException("error: image is empty");
+
+            // c. check that col and row are positive integers
+        if (row < 0 || col < 0 || distance < 0) {
+            throw new IllegalArgumentException("error: a paramater has negative value");
+        }
+
+        // 2. get the connection pixels of (row, col) in image
         boolean[][] connectedPixels = connectedPixels(image, row, col, distance);
 
-        // 2. compute the slope of this minutia represented by the connected pixels
+        // 3. compute the slope of this minutia represented by the connected pixels
         double slope = computeSlope(connectedPixels, row, col);
 
-        // 3. compute the angle in radians between the x-axis and the slope
+        // 4. compute the angle in radians between the x-axis and the slope
         double angle = computeAngle(connectedPixels, row, col, slope);
 
-        // 4. convert the computed angle from radian to degrees
+        // 5. convert the computed angle from radian to degrees
         float degrees = (float)Math.toDegrees(angle);
 
-        // 5. return the orientation of the minutia in degrees
+        // 6. return the orientation of the minutia in degrees
         return (degrees < 0) ? Math.round(degrees + 360) : Math.round(degrees);
     }
 
