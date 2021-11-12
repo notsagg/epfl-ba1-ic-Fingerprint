@@ -428,10 +428,20 @@ public class Fingerprint {
     * @return the orientation of the minutia in radians.
     */
     public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-        // 1. compute the orthonal slope
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input array of connected pixels
+        if (connectedPixels == null) throw new IllegalArgumentException("error: connectedPixels is null");
+
+            // b. ensure that the input array of connectedPixels is not empty
+        if (connectedPixels.length == 0) throw new IllegalArgumentException("error: connectedPixels is empty");
+
+            // c. check that col and row are positive integers
+        if (row < 0 || col < 0) throw new IllegalArgumentException("error: a paramater has negative value");
+
+        // 2. compute the orthonal slope
         double orthogonal = -1 * Math.pow(slope, -1);
 
-        // 2. count the number of pixels to the left and right side of the minutia
+        // 3. count the number of pixels to the left and right side of the minutia
         int lower = 0, upper = 0; // lower/upper pixel count
 
         for (int i = 0; i < connectedPixels.length; ++i) {
@@ -445,7 +455,7 @@ public class Fingerprint {
             }
         }
 
-        // 3. return the angle determined to be positive or negative
+        // 4. return the angle determined to be positive or negative
         return (upper >= lower) ? Math.atan(slope) : Math.atan(slope + Math.PI);
     }
 
