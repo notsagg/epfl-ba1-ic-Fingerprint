@@ -213,7 +213,15 @@ public class Fingerprint {
             throw new IllegalArgumentException("error: step is neither 0 nor 1");
         }
 
-        // 4. recursively discard redundant pixels
+        // 4. initialize working variables
+        boolean[][] thin = new boolean[image.length][image[0].length];
+
+        // 5. perform a deep-copy of the image to thin-out
+        for (int i = 0; i < image.length; ++i) {
+            thin[i] = Arrays.copyOf(image[i], image[i].length);
+        }
+
+        // 6. recursively discard redundant pixels
         for (int i = 0; i < image.length; ++i) {
             for (int j = 0; j < image[0].length; ++j) {
                 // a. check that (i, j) is a pixel
@@ -255,20 +263,20 @@ public class Fingerprint {
     *         applying the thinning algorithm.
     */
     public static boolean[][] thin(boolean[][] image) {
-        boolean[][] thin1, thin2 = new boolean[image.length][];
+        boolean[][] thin1, thin2 = new boolean[image.length][image[0].length];
 
-        // 1. perform a deep-copy of the image to thin-out
+        // 1. perform a deep-copy of the input image to thin2
         for (int i = 0; i < image.length; ++i) {
             thin2[i] = Arrays.copyOf(image[i], image[i].length);
         }
 
-        // 2. thin-out the image as long as the line is not 1 pixel wide
+        // 1. thin-out the image as long as the line is not 1 pixel wide
         do {
             // a. execute step 1
             thin1 = thinningStep(thin2, 0);
 
             // b. execute step 2
-            thin2 = thinningStep(thin2, 1);
+            thin2 = thinningStep(thin1, 1);
 
         } while (!identical(thin1, thin2));
 
