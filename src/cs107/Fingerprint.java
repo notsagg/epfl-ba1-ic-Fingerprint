@@ -34,6 +34,12 @@ public class Fingerprint {
     /// Neighbours that ought to be white for a pixel to be considered redundant (sibblings for step 1 and step 2)
     private static final int[][] THINNING_WHITES = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } };
 
+    /// Lower/Upper Coordinates of an Operating Field
+    private static int fieldLowerRow; // operating field row lower bound
+    private static int fieldUpperRow; // operating field row upper bound
+    private static int fieldLowerCol; // operating field colunn lower bound
+    private static int fieldUpperCol; // operating field colunn upper bound
+
     // MARK: - Public Methods
     /**
     * Returns an array containing the value of the 8 neighbours of the pixel at
@@ -284,6 +290,39 @@ public class Fingerprint {
         return thin2;
     }
 
+    private static boolean[][] connectedPixels(boolean[][] image, boolean[][] minutia, int row, int col, int distance) {
+        // 1. mark the pixel at (row, col)
+        minutia[row][col] = true;
+
+        // 2. get the surrounding neighbours of the considered pixel
+        boolean[] neighbours = getNeighbours(image, row, col);
+
+        // 3. iterate through each neighbour
+        for (int i = 0; i < NEIGHBOUR_COUNT; ++i) {
+            // a. compute the coordinates of the neighbour
+            int neighbourRow = row + NEIGHBOUR_MAPPING[i][0];
+            int neighbourCol = col + NEIGHBOUR_MAPPING[i][1];
+
+            // b. check that the neighbour row is in boundary
+            if (neighbourRow < Fingerprint.fieldLowerRow || neighbourRow > Fingerprint.fieldUpperRow) continue;
+
+            // c. check that the neighbour column is in boundary
+            if (neighbourCol < Fingerprint.fieldLowerCol || neighbourCol > Fingerprint.fieldUpperCol) continue;
+
+            // d. check that neighbour is a pixel
+            if (!image[neighbourRow][neighbourCol]) continue;
+
+            // e. check that the considered pixel is not already marked
+            if (minutia[neighbourRow][neighbourCol]) continue;
+
+            // f. continue with a recursive pixel search
+            minutia = connectedPixels(image, minutia, neighbourRow, neighbourCol, distance);
+        }
+
+        // 4. if all neighbours have been marked then exit
+        return minutia;
+    }
+
     /**
     * Computes all pixels that are connected to the pixel at coordinate
     * <code>(row, col)</code> and within the given distance of the pixel.
@@ -297,80 +336,37 @@ public class Fingerprint {
     *         <code>(row, col)</code>.
     */
     public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-        int searchRow = row, searchCol = col; // coordinates following a minutia path
+        // 1. check the validy of the input parameters
+            // a. ensure the existance of the input image
+        if (image == null) throw new IllegalArgumentException("error: image is null");
 
-        // 1. check that there is an actual minutia at the given row and column
-        if (!image[row][col]) throw new IllegalArgumentException("expecting a set pixel at (row, col)");
-
-        // 2. create a blank image to write the extracted minutia
-        boolean[][] minutia = new boolean[image.length][image[0].length]; // blank image to work on
-
-        // 3. compute the maximum/minimum coordinates of the operating field
-        int minCol = (col - distance) < 0 ? 0 : (col - distance);
-        int minRow = (row - distance) < 0 ? 0 : (row - distance);
-        int maxCol = (col + distance) >= image[0].length ? image[0].length-1 : (col + distance);
-        int maxRow = (row + distance) >= image.length ? image.length-1 : (row + distance);
-
-        // 4. while there are pixels to mark, mark them
-        while (true) {
-            // a. mark the pixel at (search row, search col) if contained in the maximum distance
-            if (searchRow <= maxRow && searchRow >= minRow) {
-                if (searchCol <= maxCol && searchCol >= minCol) {
-                    minutia[searchRow][searchCol] = true;
-                }
-            }
-
-            // b. get the surrounding neighbour
-            boolean[] neighbours = getNeighbours(image, searchRow, searchCol);
-
-            // c. if all neigbours of the origin point are marked then exit
-            if (searchRow == row && searchCol == col) {
-                int marked = 0; // number of marked neighbours
-
-                // i. count the number of marked neighbours
-                for (int i = 0; i < neighbours.length; ++i) {
-                    if (neighbours[i] && minutia[row+NEIGHBOUR_MAPPING[i][0]][col+NEIGHBOUR_MAPPING[i][1]]) {
-                        marked++;
-                    }
-                }
-
-                // ii. if all neighbours are marked then exit
-                if (blackNeighbours(neighbours) == marked) break;
-            }
-
-            // c. find the coordinate of the first pixel transition (from white to black)
-            int upcomingRow = 0, upcomingCol = 0; // potential path to be taken
-
-            for (int i = 0; i < neighbours.length; ++i) {
-                // i. compute a rotating previous element index
-                int previous = (i-1 < 0) ? (i-1 + neighbours.length) : (i-1);
-
-                // ii. memorize the coordinates if there is a notable transition
-                if (neighbours[i] && !neighbours[previous]) {
-                    upcomingRow = searchRow + NEIGHBOUR_MAPPING[i][0];
-                    upcomingCol = searchCol + NEIGHBOUR_MAPPING[i][1];
-
-                    if (!minutia[upcomingRow][upcomingCol]) {
-                        if (searchRow <= maxRow && searchRow >= minRow) {
-                            if (searchCol <= maxCol && searchCol >= minCol) {
-                                searchRow = upcomingRow;
-                                searchCol = upcomingCol;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // iii. take the pass anyway if on the last iteration
-                if (i == neighbours.length-1) {
-                    searchRow = upcomingRow;
-                    searchCol = upcomingCol;
-                }
-            }
+            // b. check that there is an actual minutia at the given row and column
+        if (!image[row][col]) {
+            System.out.println("row: " + row + " and col: " + col);
+            throw new IllegalArgumentException("error: expecting a pixel at (row, col)");
         }
 
-        // 5. return a new image of connected pixels
-        return minutia;
+            // c. ensure that row, col, and distance are positive integer
+        if (row < 0 || col < 0 || distance < 0) {
+            throw new IllegalArgumentException("error: a paramater has negative value");
+        }
+
+            // d. check that row, and col are contained in the boundaries of the image
+        if (row >= image.length || col >= image[0].length) {
+            throw new IllegalArgumentException("error: a parameter is out of boundary");
+        }
+
+        // 2. compute the coordinates of the operating field
+        Fingerprint.fieldLowerCol = (col - distance) < 0 ? 0 : (col - distance);
+        Fingerprint.fieldLowerRow = (row - distance) < 0 ? 0 : (row - distance);
+        Fingerprint.fieldUpperCol = (col + distance) >= image[0].length ? image[0].length-1 : (col + distance);
+        Fingerprint.fieldUpperRow = (row + distance) >= image.length ? image.length-1 : (row + distance);
+
+        // 3. initialize the connected pixels array
+        boolean[][] minutia = new boolean[image.length][image[0].length];
+
+        // 4. return the computed array of connected pixels
+        return connectedPixels(image, minutia, row, col, distance);
     }
 
     /**
