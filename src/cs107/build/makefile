@@ -22,6 +22,6 @@ Test%.class: Test%.java
 
 .PHONY: clean clean-deps
 clean:
-	@find . -type f -name "*.class" -delete
+	@find . -maxdepth 1 -type f \( -name "*.class" -o -name "*.png" \) -delete
 clean-deps:
-	@find deps/ -type d -name "junit" -exec rm -r {} \;
+	@find deps/junit -maxdepth 1 -type d -name "junit*" -exec rm -r {} \;
