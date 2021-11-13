@@ -150,12 +150,9 @@ public class Fingerprint {
         int transitions = 0; // number of transitions from white to black made
 
         // 4. count the number of essential transitions made (white to black)
-        for (int i = 0; i < NEIGHBOUR_COUNT; ++i) {
-            // 1. compute a rotating previous element index
-            int previous = (i-1 < 0) ? (i-1 + NEIGHBOUR_COUNT) : (i-1);
-
-            // 2. check if there were a notable transition
-            if (neighbours[i] && !neighbours[previous]) transitions++;
+        for (int i = 1; i <= NEIGHBOUR_COUNT; ++i) {
+            // a. check if there were a notable transition
+            if (neighbours[i%NEIGHBOUR_COUNT] && !neighbours[i-1]) transitions++;
         }
 
         // 5. return the total count
