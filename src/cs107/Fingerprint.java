@@ -228,31 +228,31 @@ public class Fingerprint {
                 if (!image[i][j]) continue;
 
                 // b. get the number of surrounding pixels (black neighbours)
-                boolean[] neighbours = getNeighbours(image, i, j);
-                int neighbourCount = blackNeighbours(neighbours);
+                boolean[] adjacent = getNeighbours(image, i, j);
+                int blacks = blackNeighbours(adjacent);
 
-                // c. check that the pixel at (i, j) has more than 2 but less than 6 black neighbours
-                if (neighbourCount < 2 || neighbourCount > 6) continue;
+                // c. check that there are more than 2 but less than 6 black black neighbours
+                if (blacks < 2 || blacks > 6) continue;
 
-                // d. check that there is only one transition from the current pixel to the neighbour
-                if (transitions(neighbours) != 1) continue;
+                // d. check that there is only one transition from (i, j) to the black neighbour
+                if (transitions(adjacent) != 1) continue;
 
-                // e. get the indexes where to expect white neighbours for the corresponding step
+                // e. get the indexes where to expect white neighbours
                 int[] whites = THINNING_WHITES[step];
 
                 // f. check that P0, P2, or P4/P6 are white neighbours
-                if (neighbours[whites[0]] && neighbours[whites[1]] && neighbours[whites[2]]) continue;
+                if (adjacent[whites[0]] && adjacent[whites[1]] && adjacent[whites[2]]) continue;
 
                 // g. check that P2/P0, P4, or P6 are white neighbours
-                if (neighbours[whites[3]] && neighbours[whites[4]] && neighbours[whites[5]]) continue;
+                if (adjacent[whites[3]] && adjacent[whites[4]] && adjacent[whites[5]]) continue;
 
                 // h. thin-out the pixel at (i, j)
-                image[i][j] = false;
+                thin[i][j] = false;
             }
         }
 
-        // 5. return the thinned-out image
-        return image;
+        // 7. return the thinned-out image
+        return thin;
     }
 
     /**
