@@ -44,6 +44,45 @@ public final class Helper {
     private final static double LUMA_COEFFICIENT_BLUE = 0.114;
 
     /**
+    * Displays an input image with a combination of `0`s and `1`s.
+    *
+    * Doing so makes it easier to identify where two pixels differ.
+    *
+    * @param image Input image to be considered
+    */
+    public static void displayImage(boolean[][] image) {
+        for (int i = 0; i < image.length; ++i) {
+            for (int j = 0; j < image[0].length; ++j) {
+                System.out.print((image[i][j] ? " 1 " : " 0 "));
+            }
+            System.out.println("");
+        }
+    }
+
+    /**
+    * Convert an input boolean image to its integer counterpart. <br>
+    *
+    * This method serves the purpose of having JUnit output the differences between two image
+    * as it does not natively support the boolean array type.
+    *
+    * @param image Input image to be considered
+    * @return The integer counterpart of the input boolean image
+    */
+    public static int[][] convertImage(boolean[][] image) {
+        int[][] intImage = new int[image.length][image[0].length];
+
+        //
+        for (int i = 0; i < image.length; ++i) {
+            for (int j = 0; j < image[0].length; ++j) {
+                intImage[i][j] = image[i][j] ? 1 : 0;
+            }
+        }
+
+        //
+        return intImage;
+    }
+
+    /**
     * Reads specified image from the resource folder as ARGB.
     *
     * @param name Name of the image to read, or path relative to the resource
