@@ -64,7 +64,7 @@ public final class TestConnectedPixels {
             // b. assert the identical content of both array of connected pixels
         assertArrayEquals("test case 3 - images differ", Helper.convertImage(expt3), Helper.convertImage(c3));
 
-        // 4. diverging path test case
+        // 4. diverging path test case (1)
             // a. construct the test case
         boolean[][] im4 = {
             { true,  false, false, true,  true },
@@ -82,6 +82,25 @@ public final class TestConnectedPixels {
 
             // b. assert the identical content of the two output arrays
         assertArrayEquals("test case 4 - images differ", Helper.convertImage(expt4), Helper.convertImage(c4));
+
+        // 5. diverging path test case (2)
+            // a. construct the test case
+        boolean[][] im5 = {
+            { false,  true, false, false,  false },
+            { false,  true, false,  false,  false },
+            { false,  true,  true, true, true },
+            { true, false,  false, true,  false }
+        };
+        boolean[][] expt5 = {
+            { false,  true, false, false,  false },
+            { false,  true, false,  false,  false },
+            { false,  true,  true, true, true },
+            { true, false,  false, true,  false }
+        };
+        boolean[][] c5 = Fingerprint.connectedPixels(im5, 2, 1, 3);
+
+            // b. assert the identical content of the two output arrays
+        assertArrayEquals("test case 5 - images differ", Helper.convertImage(expt5), Helper.convertImage(c5));
 
         // 5. summarize the testing process
         System.out.println(" => TestConnectedPixels - All Tests Passed");
