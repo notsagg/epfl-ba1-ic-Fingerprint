@@ -19,7 +19,7 @@ public final class TestApplyRotation {
         int[] r2 = Fingerprint.applyRotation(m123, 10, 5, 0);
 
             // b. assert the minutia equality
-        assertArrayEquals("test case 1 - minutia parameters differ", expt2, r2);
+        assertArrayEquals("test case 2 - minutia parameters differ", expt2, r2);
 
         // 3. test case (3)
             // a. construct the test case
@@ -27,7 +27,7 @@ public final class TestApplyRotation {
         int[] r3 = Fingerprint.applyRotation(m123, 0, 0, 90);
 
             // b. assert the minutia equality
-        assertArrayEquals("test case 1 - minutia parameters differ", expt3, r3);
+        assertArrayEquals("test case 3 - minutia parameters differ", expt3, r3);
 
         // 4. test case (4)
             // a. construct the test case
@@ -36,7 +36,7 @@ public final class TestApplyRotation {
         int[] r4 = Fingerprint.applyRotation(m4, 0, 0, 90);
 
             // b. assert the minutia equality
-        assertArrayEquals("test case 1 - minutia parameters differ", expt4, r4);
+        assertArrayEquals("test case 4 - minutia parameters differ", expt4, r4);
 
         // 5. test case (5)
             // a. construct the test case
@@ -45,7 +45,7 @@ public final class TestApplyRotation {
         int[] r5 = Fingerprint.applyRotation(m5, 0, 0, 90);
 
             // b. assert the minutia equality
-        assertArrayEquals("test case 1 - minutia parameters differ", expt5, r5);
+        assertArrayEquals("test case 5 - minutia parameters differ", expt5, r5);
 
         // 6. summarize the testing process
         System.out.println(" => TestApplyRotation - All Tests Passed");
