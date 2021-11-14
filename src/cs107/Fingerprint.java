@@ -525,10 +525,17 @@ public class Fingerprint {
     * @see #thin(boolean[][])
     */
     public static List<int[]> extract(boolean[][] image) {
-        // 1. create a new array list to hold the extracted minutias (row, col and orientation)
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input image
+        if (image == null) throw new IllegalArgumentException("error: image is null");
+
+            // b. ensure that the input image is not empty
+        if (image.length == 0) throw new IllegalArgumentException("error: image is empty");
+
+        // 2. create a new array list to hold the extracted minutias (row, col and orientation)
         ArrayList<int[]> list = new ArrayList<int[]>();
 
-        // 2. extract the minutias from the input image
+        // 3. extract the minutias from the input image
         for (int i = 1; i < image.length-1; ++i) {
             for (int j = 1; j < image[0].length-1; ++j) {
                 // a. ensure that (i, j) is a pixel
@@ -550,7 +557,7 @@ public class Fingerprint {
             }
         }
 
-        // 3. reutrn the list of extracted minutia
+        // 4. reutrn the list of extracted minutia
         return list;
     }
 
@@ -564,9 +571,22 @@ public class Fingerprint {
     * @return the minutia rotated around the given center.
     */
     public static int[] applyRotation(int[] minutia, int centerRow, int centerCol, int rotation) {
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input minutia
+        if (minutia == null) throw new IllegalArgumentException("error: minutia is null");
+
+            // b. ensure that the input minutia has three parameters
+        if (minutia.length != 3) throw new IllegalArgumentException("error: minutia has wrong parameters");
+
+            // c. check that centerRow and centerCol are positive integers
+        if (centerRow < 0 || centerCol < 0) {
+            throw new IllegalArgumentException("error: a paramater has negative value");
+        }
+
+        // 2. initialize working variables
         int[] orientedMinutia = new int[3]; // row, col, and orientation
 
-        // 1. compute the new coordinates of our oriented minutia
+        // 3. compute the new coordinates of our oriented minutia
             // a. compute the current cartesian coordinate system
         int y = centerRow - minutia[0]; // tantamount to rows
         int x = minutia[1] - centerCol; // tantamount to cols
@@ -582,10 +602,10 @@ public class Fingerprint {
         orientedMinutia[0] = centerRow - orientedY;
         orientedMinutia[1] = orientedX + centerCol;
 
-        // 2. compute the orientation in the new coordinate system
+        // 4. compute the orientation in the new coordinate system
         orientedMinutia[2] = (minutia[2] + rotation) % 360;
 
-        // 3. return the parameters of our oriented minutia
+        // 5. return the parameters of our oriented minutia
         return orientedMinutia;
     }
 
@@ -598,16 +618,24 @@ public class Fingerprint {
     * @return the translated minutia.
     */
     public static int[] applyTranslation(int[] minutia, int rowTranslation, int colTranslation) {
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the input minutia
+        if (minutia == null) throw new IllegalArgumentException("error: minutia is null");
+
+            // b. ensure that the input minutia has three parameters
+        if (minutia.length != 3) throw new IllegalArgumentException("error: minutia has wrong parameters");
+
+        // 2. initialize working variables
         int[] translatedMinutia = new int[3]; // row, col, and orientation
 
-        // 1. update the coordinates of our translated minutia
+        // 3. update the coordinates of our translated minutia
         translatedMinutia[0] = minutia[0] - rowTranslation;
         translatedMinutia[1] = minutia[1] - colTranslation;
 
-        // 2. keep the orientation of our minutia as is
+        // 4. keep the orientation of our minutia as is
         translatedMinutia[2] = minutia[2];
 
-        // 3. return the parameters of our translated minutia
+        // 5. return the parameters of our translated minutia
         return translatedMinutia;
     }
 
@@ -625,16 +653,11 @@ public class Fingerprint {
     */
     public static int[] applyTransformation(int[] minutia, int centerRow, int centerCol, int rowTranslation,
     int colTranslation, int rotation) {
-        int[] transformedMinutia;
-
         // 1. apply a rotation to our minutia
-        transformedMinutia = applyRotation(minutia, centerRow, centerCol, rotation);
+        int[] transformedMinutia = applyRotation(minutia, centerRow, centerCol, rotation);
 
         // 2. apply a translation to our minutia
-        transformedMinutia = applyTranslation(minutia, rowTranslation, colTranslation);
-
-        // 3. return our transformed minutia
-        return transformedMinutia;
+        return applyTranslation(transformedMinutia, rowTranslation, colTranslation);
     }
 
     /**
@@ -656,7 +679,7 @@ public class Fingerprint {
             // a. apply the transformation
             int[] minutia = applyTransformation(minutiae.get(i), centerRow, centerCol, rowTranslation, colTranslation, rotation);
 
-            // b. update our list of minutias with the updated minutia
+            // b. update our list of minutiae with the transformed minutia
             minutiae.set(i, minutia);
         }
 
