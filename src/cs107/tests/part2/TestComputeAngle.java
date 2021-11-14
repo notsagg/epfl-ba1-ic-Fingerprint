@@ -17,7 +17,6 @@ public final class TestComputeAngle {
         double expt1 = 0.26;
         boolean[][] c1 = Fingerprint.connectedPixels(im1, 3, 0, 11);
         double s1 = Fingerprint.computeSlope(c1, 3, 0);
-        // System.out.println("slope 1: " + s1);
         double a1 = Fingerprint.computeAngle(c1, 3, 0, s1);
 
             // b. assert the slope equality
@@ -34,7 +33,6 @@ public final class TestComputeAngle {
         double expt2 = -0.34;
         boolean[][] c2 = Fingerprint.connectedPixels(im2, 0, 0, 11);
         double s2 = Fingerprint.computeSlope(c2, 0, 0);
-        // System.out.println("slope 2: " + s2);
         double a2 = Fingerprint.computeAngle(c2, 0, 0, s2);
 
             // b. assert the slope equality
