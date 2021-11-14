@@ -451,13 +451,28 @@ public class Fingerprint {
                 if (!connectedPixels[i][j]) continue;
 
                 // b. increment accordingly (pixel is above or belove the orthogonal line)
-                if (j >= orthogonal*i) upper++;
+                if (i >= orthogonal*j) upper++;
                 else lower++;
             }
         }
 
-        // 4. return the angle determined to be positive or negative
-        return (upper >= lower) ? Math.atan(slope) : Math.atan(slope + Math.PI);
+        // 4. handle the undefined cases
+        if (slope == Double.POSITIVE_INFINITY) {
+            return (upper >= lower) ? Math.PI/2 : -1/2 * Math.PI;
+        }
+
+        // 5. compute the angle between the x-axis and the slope using the arctan function
+        double angle = Math.atan(slope);
+
+        // 6. return the properly oriented angle
+            // a. 3rd quadrant and 2nd quadrant
+        if ((angle >= 0 && lower > upper) || (angle < 0 && lower <= upper)) {
+            return angle + Math.PI;
+
+            // b. 1st quadrant and 4th quadrant
+        } else {
+            return angle;
+        }
     }
 
     /**
