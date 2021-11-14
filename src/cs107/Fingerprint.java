@@ -445,13 +445,13 @@ public class Fingerprint {
         // 3. count the number of pixels to the left and right side of the minutia
         int lower = 0, upper = 0; // lower/upper pixel count
 
-        for (int i = 0; i < connectedPixels.length; ++i) {
-            for (int j = 0; j < connectedPixels[0].length; ++j) {
+        for (int y = 0; y < connectedPixels.length; ++y) {
+            for (int x = 0; x < connectedPixels[0].length; ++x) {
                 // a. check that the pixel at (i, j) is part of the minutia
-                if (!connectedPixels[i][j]) continue;
+                if (!connectedPixels[y][x]) continue;
 
                 // b. increment accordingly (pixel is above or belove the orthogonal line)
-                if (i >= orthogonal*j) upper++;
+                if ((row-y) >= orthogonal*(x-col)) upper++;
                 else lower++;
             }
         }
