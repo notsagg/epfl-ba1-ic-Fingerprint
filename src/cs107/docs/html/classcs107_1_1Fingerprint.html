@@ -36,6 +36,7 @@
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classcs107_1_1Fingerprint-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -59,9 +60,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a3fd5da0927a1dfa421995a82e6f5feff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80cce63e5cbca082643b1c3eba8f51a7"><td class="memItemLeft" align="right" valign="top">static boolean[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a80cce63e5cbca082643b1c3eba8f51a7">connectedPixels</a> (boolean[][] image, int row, int col, int distance)</td></tr>
 <tr class="separator:a80cce63e5cbca082643b1c3eba8f51a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a874d48d056f0ebc7ef0a58b29ae16b6d"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a874d48d056f0ebc7ef0a58b29ae16b6d">computeSlope</a> (boolean[][] <a class="el" href="classcs107_1_1Fingerprint.html#a80cce63e5cbca082643b1c3eba8f51a7">connectedPixels</a>, int row, int col)</td></tr>
+<tr class="memitem:a874d48d056f0ebc7ef0a58b29ae16b6d"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a874d48d056f0ebc7ef0a58b29ae16b6d">computeSlope</a> (boolean[][] <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels</a>, int row, int col)</td></tr>
 <tr class="separator:a874d48d056f0ebc7ef0a58b29ae16b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad32201dd659b9311b3b68d5cd22806fe"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#ad32201dd659b9311b3b68d5cd22806fe">computeAngle</a> (boolean[][] <a class="el" href="classcs107_1_1Fingerprint.html#a80cce63e5cbca082643b1c3eba8f51a7">connectedPixels</a>, int row, int col, double slope)</td></tr>
+<tr class="memitem:ad32201dd659b9311b3b68d5cd22806fe"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#ad32201dd659b9311b3b68d5cd22806fe">computeAngle</a> (boolean[][] <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels</a>, int row, int col, double slope)</td></tr>
 <tr class="separator:ad32201dd659b9311b3b68d5cd22806fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8133e34036f40c6a52da0e2010a337f"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#ad8133e34036f40c6a52da0e2010a337f">computeOrientation</a> (boolean[][] image, int row, int col, int distance)</td></tr>
 <tr class="separator:ad8133e34036f40c6a52da0e2010a337f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,12 +104,41 @@ static final int&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memdesc:a91efe75dcef56b9fcaae4f0cf355cd0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The offset in each direction for the rotation to test when doing the matching. <br /></td></tr>
 <tr class="separator:a91efe75dcef56b9fcaae4f0cf355cd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a70c832dcc8b3479298e53f841d5d7c8b"><td class="memItemLeft" align="right" valign="top">static boolean[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels</a> (boolean[][] image, boolean[][] minutia, int row, int col, int distance)</td></tr>
+<tr class="separator:a70c832dcc8b3479298e53f841d5d7c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:aca7f7e4743e8828e97697a2d2da624eb"><td class="memItemLeft" align="right" valign="top"><a id="aca7f7e4743e8828e97697a2d2da624eb"></a>
-static final int[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#aca7f7e4743e8828e97697a2d2da624eb">neighbourMapping</a> = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} }</td></tr>
-<tr class="memdesc:aca7f7e4743e8828e97697a2d2da624eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The position of neighbour P0 to P7 relative to (row, col) in an image. <br /></td></tr>
-<tr class="separator:aca7f7e4743e8828e97697a2d2da624eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3538846917082667ed3fd2078ce86252"><td class="memItemLeft" align="right" valign="top"><a id="a3538846917082667ed3fd2078ce86252"></a>
+static final int[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a3538846917082667ed3fd2078ce86252">NEIGHBOUR_MAPPING</a> = { {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} }</td></tr>
+<tr class="memdesc:a3538846917082667ed3fd2078ce86252"><td class="mdescLeft">&#160;</td><td class="mdescRight">The position of neighbour P0 to P7 relative to (row, col) in an image. <br /></td></tr>
+<tr class="separator:a3538846917082667ed3fd2078ce86252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b1e712818c766f2ac0c9a3aa441f3b"><td class="memItemLeft" align="right" valign="top"><a id="af4b1e712818c766f2ac0c9a3aa441f3b"></a>
+static final int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#af4b1e712818c766f2ac0c9a3aa441f3b">NEIGHBOUR_COUNT</a> = 8</td></tr>
+<tr class="memdesc:af4b1e712818c766f2ac0c9a3aa441f3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of neighbours that exist around a given pixel. <br /></td></tr>
+<tr class="separator:af4b1e712818c766f2ac0c9a3aa441f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad50bec91f286c3320745ab649b02d234"><td class="memItemLeft" align="right" valign="top"><a id="ad50bec91f286c3320745ab649b02d234"></a>
+static final int[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#ad50bec91f286c3320745ab649b02d234">THINNING_WHITES</a> = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } }</td></tr>
+<tr class="memdesc:ad50bec91f286c3320745ab649b02d234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Neighbours that ought to be white for a pixel to be considered redundant (sibblings for step 1 and step 2) <br /></td></tr>
+<tr class="separator:ad50bec91f286c3320745ab649b02d234"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af081a946a01181162699e0392dea9887"><td class="memItemLeft" align="right" valign="top"><a id="af081a946a01181162699e0392dea9887"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#af081a946a01181162699e0392dea9887">fieldLowerRow</a></td></tr>
+<tr class="memdesc:af081a946a01181162699e0392dea9887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operating Field Row Lower Bound static variable used by the recursive <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels()</a> method. <br /></td></tr>
+<tr class="separator:af081a946a01181162699e0392dea9887"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f18ff5ef6cdc86d73445f943db22d0b"><td class="memItemLeft" align="right" valign="top"><a id="a7f18ff5ef6cdc86d73445f943db22d0b"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a7f18ff5ef6cdc86d73445f943db22d0b">fieldUpperRow</a></td></tr>
+<tr class="memdesc:a7f18ff5ef6cdc86d73445f943db22d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operating Field Row Upper Bound static variable used by the recursive <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels()</a> method. <br /></td></tr>
+<tr class="separator:a7f18ff5ef6cdc86d73445f943db22d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ce05e12e7ea6de439914c07d1fe448a"><td class="memItemLeft" align="right" valign="top"><a id="a0ce05e12e7ea6de439914c07d1fe448a"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#a0ce05e12e7ea6de439914c07d1fe448a">fieldLowerCol</a></td></tr>
+<tr class="memdesc:a0ce05e12e7ea6de439914c07d1fe448a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operating Field Column Lower Bound static variable used by the recursive <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels()</a> method. <br /></td></tr>
+<tr class="separator:a0ce05e12e7ea6de439914c07d1fe448a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaec6fdc539bbe68a0b453186d1add60"><td class="memItemLeft" align="right" valign="top"><a id="acaec6fdc539bbe68a0b453186d1add60"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcs107_1_1Fingerprint.html#acaec6fdc539bbe68a0b453186d1add60">fieldUpperCol</a></td></tr>
+<tr class="memdesc:acaec6fdc539bbe68a0b453186d1add60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operating Field Column Upper Bound static variable used by the recursive <a class="el" href="classcs107_1_1Fingerprint.html#a70c832dcc8b3479298e53f841d5d7c8b">connectedPixels()</a> method. <br /></td></tr>
+<tr class="separator:acaec6fdc539bbe68a0b453186d1add60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides tools to compare fingerprint. </p>
@@ -574,8 +604,75 @@ static final int[][]&#160;</td><td class="memItemRight" valign="bottom"><a class
 
 </div>
 </div>
+<a id="a70c832dcc8b3479298e53f841d5d7c8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70c832dcc8b3479298e53f841d5d7c8b">&#9670;&nbsp;</a></span>connectedPixels() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static boolean [][] cs107.Fingerprint.connectedPixels </td>
+          <td>(</td>
+          <td class="paramtype">boolean&#160;</td>
+          <td class="paramname"><em>image</em>[][], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean&#160;</td>
+          <td class="paramname"><em>minutia</em>[][], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>col</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>distance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Computes all pixels that are connected to the pixel at coordinate <code>(row, col)</code> and within the given distance of the pixel.</p>
+<p>This is done by performing a recursive search over all neighbours of a given row/column.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>array containing each pixel's boolean value. </td></tr>
+    <tr><td class="paramname">minutia</td><td>array containing the previously marked as connected pixels. </td></tr>
+    <tr><td class="paramname">row</td><td>the first coordinate of the pixel of interest. </td></tr>
+    <tr><td class="paramname">col</td><td>the second coordinate of the pixel of interest. </td></tr>
+    <tr><td class="paramname">distance</td><td>the maximum distance at which a pixel is considered. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An array where <code>true</code> means that the pixel is within <code>distance</code> and connected to the pixel at <code>(row, col)</code>. </dd></dl>
+
+</div>
+</div>
 <a id="a80cce63e5cbca082643b1c3eba8f51a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80cce63e5cbca082643b1c3eba8f51a7">&#9670;&nbsp;</a></span>connectedPixels()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a80cce63e5cbca082643b1c3eba8f51a7">&#9670;&nbsp;</a></span>connectedPixels() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
