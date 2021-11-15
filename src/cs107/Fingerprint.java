@@ -549,7 +549,7 @@ public class Fingerprint {
                 if (transitions != 1 && transitions != 3) continue;
 
                 // d. get the ortienttion of the minutia
-                int orientation = computeOrientation(image, i, j, image.length);
+                int orientation = computeOrientation(image, i, j, ORIENTATION_DISTANCE);
                 int[] minutia = { i, j, orientation };
 
                 // e. apend the minutia to our list
