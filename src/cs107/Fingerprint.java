@@ -653,10 +653,22 @@ public class Fingerprint {
     */
     public static int[] applyTransformation(int[] minutia, int centerRow, int centerCol, int rowTranslation,
     int colTranslation, int rotation) {
-        // 1. apply a rotation to our minutia
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the minutiae list
+        if (minutia == null) throw new IllegalArgumentException("error: minutia is null");
+
+            // b. ensure that the input minutia has three parameters
+        if (minutia.length != 3) throw new IllegalArgumentException("error: minutia has wrong parameters");
+
+            // c. check that centerRow and centerCol are positive integers
+        if (centerRow < 0 || centerCol < 0) {
+            throw new IllegalArgumentException("error: a paramater has negative value");
+        }
+
+        // 2. apply a rotation to our minutia
         int[] transformedMinutia = applyRotation(minutia, centerRow, centerCol, rotation);
 
-        // 2. apply a translation to our minutia
+        // 3. apply a translation to our minutia
         return applyTranslation(transformedMinutia, rowTranslation, colTranslation);
     }
 
@@ -674,7 +686,10 @@ public class Fingerprint {
     */
     public static List<int[]> applyTransformation(List<int[]> minutiae, int centerRow, int centerCol, int rowTranslation,
     int colTranslation, int rotation) {
-        // 1. for each item of minutiae appply a transformation
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of the minutiae list
+        if (minutiae == null) throw new IllegalArgumentException("error: minutiae is null");
+
         for (int i = 0; i < minutiae.size(); ++i) {
             // a. apply the transformation
             int[] minutia = applyTransformation(minutiae.get(i), centerRow, centerCol, rowTranslation, colTranslation, rotation);
@@ -699,9 +714,22 @@ public class Fingerprint {
     */
     public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
     int maxOrientation) {
-        int matched = 0; // number of matching minutiae
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of both minutiae lists
+        if (minutiae1 == null || minutiae2 == null) {
+            throw new IllegalArgumentException("error: either list of minutiae is null");
+        }
 
-        // 1. compare all minutiae from minutiae1 to all minutiae of minutia2
+            // b. check that maxDistance is a positive integer
+        if (maxDistance < 0) throw new IllegalArgumentException("error: maxDistance has negative value");
+
+            // c. discard the trivial case where no minutiae are present in the lists
+        if (minutiae1.size() == 0 || minutiae2.size() == 0) return 0;
+
+        // 2. initialize working variables
+        int matched = 0; // number of matched minutiae
+
+        // 3. compare all minutiae from minutiae1 to all minutiae of minutia2
         for (int i = 0; i < minutiae1.size(); ++i) {
             for (int j = 0; j < minutiae2.size(); ++j) {
                 // a. compute the difference for all parameters between the two minutiae
@@ -736,9 +764,13 @@ public class Fingerprint {
     *         otherwise.
     */
     public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-        // 1. superpose every minutiae from minutia2 over the minutia at i from minutiae1
-        for (int i = 0; i < minutiae1.size(); ++i) {
-            for (int j = 0; j < minutiae2.size(); ++j) {
+        // 1. check the validy of the input parameters
+            // a. ensure the existence of both minutiae lists
+        if (minutiae1 == null || minutiae2 == null) {
+            throw new IllegalArgumentException("error: either list of minutiae is null");
+        }
+
+        // 2. superpose every minutiae from minutia2 over the minutia at i from minutiae1
                 // a. compute the transformation in row/col to apply (translation)
                 int rowDiff = minutiae2.get(j)[0] - minutiae1.get(i)[0];
                 int colDiff = minutiae2.get(j)[1] - minutiae1.get(i)[1];
