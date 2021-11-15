@@ -34,11 +34,17 @@ public class Fingerprint {
     /// Neighbours that ought to be white for a pixel to be considered redundant (sibblings for step 1 and step 2)
     private static final int[][] THINNING_WHITES = { { 0, 2, 4, 2, 4, 6 }, { 0, 2, 6, 0, 4, 6 } };
 
-    /// Lower/Upper Coordinates of an Operating Field
-    private static int fieldLowerRow; // operating field row lower bound
-    private static int fieldUpperRow; // operating field row upper bound
-    private static int fieldLowerCol; // operating field colunn lower bound
-    private static int fieldUpperCol; // operating field colunn upper bound
+    /// Operating Field Row Lower Bound static variable used by the recursive connectedPixels() method
+    private static int fieldLowerRow;
+
+    /// Operating Field Row Upper Bound static variable used by the recursive connectedPixels() method
+    private static int fieldUpperRow;
+
+    /// Operating Field Column Lower Bound static variable used by the recursive connectedPixels() method
+    private static int fieldLowerCol;
+
+    /// Operating Field Column Upper Bound static variable used by the recursive connectedPixels() method
+    private static int fieldUpperCol;
 
     // MARK: - Public Methods
     /**
@@ -290,6 +296,21 @@ public class Fingerprint {
         return thin2;
     }
 
+    /**
+    * Computes all pixels that are connected to the pixel at coordinate
+    * <code>(row, col)</code> and within the given distance of the pixel.
+    *
+    * This is done by performing a recursive search over all neighbours of a given row/column.
+    *
+    * @param image    array containing each pixel's boolean value.
+    * @param minutia  array containing the previously marked as connected pixels.
+    * @param row      the first coordinate of the pixel of interest.
+    * @param col      the second coordinate of the pixel of interest.
+    * @param distance the maximum distance at which a pixel is considered.
+    * @return An array where <code>true</code> means that the pixel is within
+    *         <code>distance</code> and connected to the pixel at
+    *         <code>(row, col)</code>.
+    */
     private static boolean[][] connectedPixels(boolean[][] image, boolean[][] minutia, int row, int col, int distance) {
         // 1. mark the pixel at (row, col)
         minutia[row][col] = true;
