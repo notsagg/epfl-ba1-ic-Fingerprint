@@ -690,16 +690,20 @@ public class Fingerprint {
             // a. ensure the existence of the minutiae list
         if (minutiae == null) throw new IllegalArgumentException("error: minutiae is null");
 
+        // 2. initialize working variables
+        ArrayList<int[]> transformedMinutiae = new ArrayList<int[]>();
+
+        // 3. for each item of minutiae appply a transformation
         for (int i = 0; i < minutiae.size(); ++i) {
             // a. apply the transformation
             int[] minutia = applyTransformation(minutiae.get(i), centerRow, centerCol, rowTranslation, colTranslation, rotation);
 
             // b. update our list of minutiae with the transformed minutia
-            minutiae.set(i, minutia);
+            transformedMinutiae.add(i, minutia);
         }
 
-        // 2. return the updated list of minutiae
-        return minutiae;
+        // 4. return the updated list of minutiae
+        return transformedMinutiae;
     }
     /**
     * Counts the number of overlapping minutiae.
