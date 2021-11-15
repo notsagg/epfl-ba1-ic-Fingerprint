@@ -390,7 +390,7 @@ public class Fingerprint {
         if (row < 0 || col < 0) throw new IllegalArgumentException("error: a paramater has negative value");
 
         // 2. initialize working variables
-        int xy = 0, x2 = 0, y2 = 0; // x*y, x^2, and y^2
+        double xy = 0, x2 = 0, y2 = 0; // x*y, x^2, and y^2
 
         // 3. recursively compute the three components of a linear regression
         for (int y = 0; y < connectedPixels.length; ++y) {
@@ -413,8 +413,8 @@ public class Fingerprint {
         if (x2 == 0) return Double.POSITIVE_INFINITY;
 
         // 5. compute the general slope
-        if (x2 >= y2) return (double)(xy)/x2;
-        else return (double)(y2)/xy;
+        if (x2 >= y2) return xy/x2;
+        else return y2/xy;
     }
 
     /**
@@ -465,11 +465,11 @@ public class Fingerprint {
         double angle = Math.atan(slope);
 
         // 6. return the properly oriented angle
-            // a. 3rd quadrant and 2nd quadrant
+            // a. 3rd quadrant and 4th quadrant
         if ((angle >= 0 && lower > upper) || (angle < 0 && lower <= upper)) {
             return angle + Math.PI;
 
-            // b. 1st quadrant and 4th quadrant
+            // b. 1st quadrant and 2nd quadrant
         } else {
             return angle;
         }
