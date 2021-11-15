@@ -737,9 +737,9 @@ public class Fingerprint {
         for (int i = 0; i < minutiae1.size(); ++i) {
             for (int j = 0; j < minutiae2.size(); ++j) {
                 // a. compute the difference for all parameters between the two minutiae
-                int rowDiff = minutiae1.get(i)[0] - minutiae2.get(j)[0]; // difference in rows
-                int colDiff = minutiae1.get(i)[1] - minutiae2.get(j)[1]; // difference in columns
-                int angleDiff = minutiae1.get(i)[2] - minutiae2.get(j)[2]; // difference in orientation
+                int rowDiff = Math.abs(minutiae1.get(i)[0] - minutiae2.get(j)[0]); // difference in rows
+                int colDiff = Math.abs(minutiae1.get(i)[1] - minutiae2.get(j)[1]); // difference in columns
+                int angleDiff = Math.abs(minutiae1.get(i)[2] - minutiae2.get(j)[2]); // difference in orientation
 
                 // b. compute the distance between the two minutiae
                 int distance = (int)Math.sqrt(Math.pow(rowDiff, 2) + Math.pow(colDiff, 2));
@@ -748,14 +748,14 @@ public class Fingerprint {
                 boolean distanceMatch = distance <= maxDistance;
 
                 // d. compare the orientation betweem the two minutiae
-                boolean angleMatch = angleDiff <= (maxOrientation + MATCH_ANGLE_OFFSET);
+                boolean angleMatch = angleDiff <= maxOrientation;
 
                 // e. increment the match count if all three parameters match with tolerance
                 if (distanceMatch && angleMatch) matched++;
             }
         }
 
-        // 2. returned the number of matching minutiae
+        // 4. returned the number of matching minutiae
         return matched;
     }
 
@@ -775,6 +775,8 @@ public class Fingerprint {
         }
 
         // 2. superpose every minutiae from minutia2 over the minutia at i from minutiae1
+        for (int i = 1; i < minutiae1.size()-1; ++i) {
+            for (int j = 1; j < minutiae2.size()-1; ++j) {
                 // a. compute the transformation in row/col to apply (translation)
                 int rowDiff = minutiae2.get(j)[0] - minutiae1.get(i)[0];
                 int colDiff = minutiae2.get(j)[1] - minutiae1.get(i)[1];
@@ -782,18 +784,25 @@ public class Fingerprint {
                 // b. compute the transformation in orientation to apply (rotation)
                 int rotDiff = minutiae2.get(j)[2] - minutiae1.get(i)[2];
 
-                // c. superspose minutiae j over minutia i by applying the computed transformation
-                List<int[]> transformed = applyTransformation(minutiae2, minutiae1.get(i)[0], minutiae1.get(i)[1], rowDiff, colDiff, rotDiff);
+                // c. extract the center row and center col where to apply the transformation
+                int row = minutiae1.get(i)[0], col = minutiae1.get(i)[1];
 
-                // d. count the number of matching minutiae with a certain tolerance
-                int found = matchingMinutiaeCount(minutiae1, transformed, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+                // d. superspose minutiae j over minutia i by applying the computed transformation
+                for (int k = 0; k <= 2*MATCH_ANGLE_OFFSET; ++k) {
+                    // i. compute the integer angle to apply
+                    int rot = rotDiff - (MATCH_ANGLE_OFFSET - k);
+                    List<int[]> transformed = applyTransformation(minutiae2, row, col, rowDiff, colDiff, rot);
 
-                // e. exit if there are enough matching minutiae
-                if (found >= FOUND_THRESHOLD) return true;
+                    // ii. count the number of matching minutiae with a certain tolerance
+                    int found = matchingMinutiaeCount(minutiae1, transformed, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+
+                    // iii. exit if there are enough matching minutiae
+                    if (found >= FOUND_THRESHOLD) return true;
+                }
             }
         }
 
-        // 2. return false otherwise
+        // 3. return false otherwise
         return false;
     }
 }
